@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abfindungsrechner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 text-gray-900">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">Abfindungsrechner</h1>
+    <form id="calculator" class="grid grid-cols-1 gap-4">
+      <label>Vollendetes Alter:
+        <input type="number" id="age" min="16" max="66" value="40" class="input" />
+      </label>
+      <label>Betriebszugehörigkeit (Jahre):
+        <input type="number" id="years" min="1" max="50" value="10" class="input" />
+      </label>
+      <label>davon Jahre in Teilzeit:
+        <input type="number" id="partTimeYears" min="0" max="50" value="3" class="input" />
+      </label>
+      <label>Bruttomonatsgehalt in Teilzeit (€):
+        <input type="number" id="partTimeSalary" value="2000" class="input" />
+      </label>
+      <label>Bruttomonatsgehalt in Vollzeit (€):
+        <input type="number" id="fullTimeSalary" value="4000" class="input" />
+      </label>
+      <label>Kinder unter 27 Jahren:
+        <input type="number" id="children" min="0" max="10" value="2" class="input" />
+      </label>
+      <label><input type="checkbox" id="singleParent" /> Alleinerziehend</label>
+      <label><input type="checkbox" id="disabled" onchange="handleDisabilityChange()" /> Schwerbehinderung</label>
+      <label><input type="checkbox" id="equalDisability" onchange="handleDisabilityChange()" /> Gleichstellung</label>
+      <label><input type="checkbox" id="voluntaryProgram" /> Freiwilligenprogramm</label>
+    </form>
+    <div class="mt-6 text-center">
+      <button onclick="calculate()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Berechnen</button>
+    </div>
+    <div id="result" class="mt-6 bg-gray-50 p-4 rounded border text-sm"></div>
+    <p class="mt-6 text-xs text-center text-gray-500">Erstellt von Hakan Tokat – Stand: <span id="today"></span></p>
+  </div>
+
+  <script>
+    function handleDisabilityChange() {
+      const disabled = document.getElementById('disabled');
+      const equal = document.getElementById('equalDisability');
+      if (disabled.checked && equal.checked) {
+        alert("Schwerbehinderung und Gleichstellung dürfen nicht gleichzeitig ausgewählt werden.");
+        disabled.checked = false;
+        equal.checked = false;
+      }
+    }
+
+    function calculate() {
+      const age = parseInt(document.getElementById('age').value);
+      const years = parseInt(document.getElementById('years').value);
+      const partTimeYears = parseInt(document.getElementById('partTimeYears').value);
+      const partTimeSalary = parseFloat(document.getElementById('partTimeSalary').value);
+      const fullTimeSalary = parseFloat(document.getElementById('fullTimeSalary').value);
+      const children = parseInt(document.getElementById('children').value);
+      const isSingle = document.getElementById('singleParent').checked;
+      const isDisabled = document.getElementById('disabled').checked;
+      const isEqual = document.getElementById('equalDisability').checked;
+      const isVoluntary = document.getElementById('voluntaryProgram').checked;
+
+      let C5 = (age < 30) ? 0.7 : (age <= 39 ? 0.8 : (age <= 49 ? 0.9 : (age <= 59 ? 1 : 1)));
+      let D8 = ((years - partTimeYears) <= (years * 2/3)) ? (partTimeYears / years) * partTimeSalary : 0;
+      let D9 = (D8 == 0) ? fullTimeSalary : ((years - partTimeYears) / years) * fullTimeSalary;
+      let C10 = D9 + D8;
+      let C11 = Math.round(C10 * 13.27 / 12);
+      let D11 = C11;
+      let E11 = Math.min(D11 * years * C5, 250000);
+
+      let D12 = 4000, D13 = 6000, D14 = 6000, D15 = 3000; E3 = 5000;
+      let E12 = (children) ? children * D12 : 0;
+      let E13 = isSingle ? D13 : 0;
+      let E14 = isDisabled ? D14 : 0;
+      let E15 = isEqual ? D15 : 0;
+
+      let D19 = 0.3;
+      let E20 = isVoluntary ? Math.min(Math.round(D11 * years * D19), 150000) : 0;
+      let E21 = isVoluntary ? (age < 30 ? 0 : (age < 40 ? 7500 : (age < 50 ? 10000 : (age < 60 ? 12500 : 15000)))) : 0;
+      let E22 = isVoluntary ? (years <= 10 ? 5000 : (years <= 15 ? 7500 : (years <= 20 ? 10000 : (years <= 25 ? 12500 : 15000)))) : 0;
+      let E18 = isVoluntary ? E20 + E21 + E22 : 0;
+
+      let E2 = E3 + E11 + E12 + E13 + E14 + E15;
+      let E24 = E18 ? E18 + E2 : E2;
+
+      document.getElementById('result').innerHTML = `
+        <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €<br/>
+        <strong>Basisabfindung (E11):</strong> ${E11.toLocaleString('de-DE')} €<br/>
+        <strong>Zuschläge:</strong><br/>
+        - Sockelbetrag: ${E3.toLocaleString('de-DE')} €<br/>
+        - Kinder: ${E12.toLocaleString('de-DE')} €<br/>
+        - Alleinerziehend: ${E13.toLocaleString('de-DE')} €<br/>
+        - Schwerbehinderung: ${E14.toLocaleString('de-DE')} €<br/>
+        - Gleichstellung: ${E15.toLocaleString('de-DE')} €<br/>
+        - Freiwilligenprogramm (gesamt): ${E18.toLocaleString('de-DE')} €<br/>
+        <strong>Gesamtabfindung (E24):</strong> <span class="text-xl font-bold">${E24.toLocaleString('de-DE')} €</span>
+      `;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("today").textContent = new Date().toLocaleDateString("de-DE");
+    });
+  </script>
+  <style>
+    .input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem; width: 100%; }
+  </style>
+</body>
+</html>
