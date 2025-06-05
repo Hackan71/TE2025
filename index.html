@@ -38,7 +38,7 @@
       <button onclick="calculate()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Berechnen</button>
     </div>
     <div id="result" class="mt-6 bg-gray-50 p-4 rounded border text-sm"></div>
-    <p class="mt-6 text-xs text-center text-gray-500">Erstellt von Hakan Tokat – Stand: <span id="today"></span></p>
+    <p class="mt-6 text-xs text-center text-gray-500">Erstellt von Hakan Tokat – Stand: 2025-06-05"></span></p>
   </div>
 
   <script>
@@ -89,7 +89,7 @@
 
       document.getElementById('result').innerHTML = `
         <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €<br/>
-        <strong>Basisabfindung (E11):</strong> ${E11.toLocaleString('de-DE')} €<br/>
+        <strong>Basisabfindung:</strong> ${E11.toLocaleString('de-DE')} €<br/>
         <strong>Zuschläge:</strong><br/>
         - Sockelbetrag: ${E3.toLocaleString('de-DE')} €<br/>
         - Kinder: ${E12.toLocaleString('de-DE')} €<br/>
@@ -97,7 +97,7 @@
         - Schwerbehinderung: ${E14.toLocaleString('de-DE')} €<br/>
         - Gleichstellung: ${E15.toLocaleString('de-DE')} €<br/>
         - Freiwilligenprogramm (gesamt): ${E18.toLocaleString('de-DE')} €<br/>
-        <strong>Gesamtabfindung (E24):</strong> <span class="text-xl font-bold">${E24.toLocaleString('de-DE')} €</span>
+        <strong>Gesamtabfindung:</strong> <span class="text-xl font-bold">${E24.toLocaleString('de-DE')} €</span>
       `;
     }
 
