@@ -1,3 +1,58 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abfindungsrechner</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 text-gray-900">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">Abfindungsrechner</h1>
+    <form id="calculator" class="grid grid-cols-1 gap-4">
+      <label>Vollendetes Alter:
+        <input type="number" id="age" min="16" max="66" value="40" class="input" />
+      </label>
+      <label>Betriebszugehörigkeit (Jahre):
+        <input type="number" id="years" min="1" max="50" value="10" class="input" />
+      </label>
+      <label>davon Jahre in Teilzeit:
+        <input type="number" id="partTimeYears" min="0" max="50" value="3" class="input" />
+      </label>
+      <label>Bruttomonatsgehalt in Teilzeit (€):
+        <input type="number" id="partTimeSalary" value="2000" class="input" />
+      </label>
+      <label>Bruttomonatsgehalt in Vollzeit (€):
+        <input type="number" id="fullTimeSalary" value="4000" class="input" />
+      </label>
+      <label>Kinder unter 27 Jahren:
+        <input type="number" id="children" min="0" max="10" value="2" class="input" />
+      </label>
+      <label><input type="checkbox" id="singleParent" /> Alleinerziehend</label>
+      <label><input type="checkbox" id="disabled" onchange="handleDisabilityChange()" /> Schwerbehinderung</label>
+      <label><input type="checkbox" id="equalDisability" onchange="handleDisabilityChange()" /> Gleichstellung</label>
+      <label><input type="checkbox" id="voluntaryProgram" /> Freiwilligenprogramm</label>
+    </form>
+    <div class="mt-6 text-center">
+      <button onclick="calculate()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Berechnen</button>
+    </div>
+    <div id="result" class="mt-6 bg-gray-50 p-4 rounded border text-sm"></div>
+    <p class="mt-6 text-xs text-center text-gray-500">Erstellt von Hakan Tokat – Stand: 2025-06-05</span></p>
+  </div>
+
+  <script>
+    function handleDisabilityChange() {
+      const disabled = document.getElementById('disabled');
+      const equal = document.getElementById('equalDisability');
+      if (disabled.checked && equal.checked) {
+        alert("Schwerbehinderung und Gleichstellung dürfen nicht gleichzeitig ausgewählt werden.");
+        disabled.checked = false;
+        equal.checked = false;
+      }
+    }
+
+
 function calculate() {
   const age = parseInt(document.getElementById('age').value);
   const years = parseInt(document.getElementById('years').value);
