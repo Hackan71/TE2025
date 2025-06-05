@@ -38,7 +38,7 @@
       <button onclick="calculate()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded">Berechnen</button>
     </div>
     <div id="result" class="mt-6 bg-gray-50 p-4 rounded border text-sm"></div>
-    <p class="mt-6 text-xs text-center text-gray-500">Erstellt von Hakan Tokat – Stand: 2025-06-05</span></p>
+    <p class="mt-6 text-xs text-center text-gray-500">Erstellt von Hakan Tokat – Stand: 2025-06-05</p>
   </div>
 
   <script>
@@ -52,59 +52,68 @@
       }
     }
 
+    function calculate() {
+      const age = parseInt(document.getElementById('age').value);
+      const years = parseInt(document.getElementById('years').value);
+      const partTimeYears = parseInt(document.getElementById('partTimeYears').value);
+      const partTimeSalary = parseFloat(document.getElementById('partTimeSalary').value);
+      const fullTimeSalary = parseFloat(document.getElementById('fullTimeSalary').value);
+      const children = parseInt(document.getElementById('children').value);
+      const isSingle = document.getElementById('singleParent').checked;
+      const isDisabled = document.getElementById('disabled').checked;
+      const isEqual = document.getElementById('equalDisability').checked;
+      const isVoluntary = document.getElementById('voluntaryProgram').checked;
 
-function calculate() {
-  const age = parseInt(document.getElementById('age').value);
-  const years = parseInt(document.getElementById('years').value);
-  const partTimeYears = parseInt(document.getElementById('partTimeYears').value);
-  const partTimeSalary = parseFloat(document.getElementById('partTimeSalary').value);
-  const fullTimeSalary = parseFloat(document.getElementById('fullTimeSalary').value);
-  const children = parseInt(document.getElementById('children').value);
-  const isSingle = document.getElementById('singleParent').checked;
-  const isDisabled = document.getElementById('disabled').checked;
-  const isEqual = document.getElementById('equalDisability').checked;
-  const isVoluntary = document.getElementById('voluntaryProgram').checked;
+      let C5 = (age < 30) ? 0.7 : (age <= 39 ? 0.8 : (age <= 49 ? 0.9 : (age <= 59 ? 1 : 1)));
+      let D8 = ((years - partTimeYears) <= (years * 2/3)) ? (partTimeYears / years) * partTimeSalary : 0;
+      let D9 = (D8 == 0) ? fullTimeSalary : ((years - partTimeYears) / years) * fullTimeSalary;
+      let C10 = D9 + D8;
+      let C11 = Math.round(C10 * 13.27 / 12);
+      let D11 = C11;
+      let rawBaseComp = D11 * years * C5;
+      let E11 = Math.min(rawBaseComp, 250000);
 
-  let C5 = (age < 30) ? 0.7 : (age <= 39 ? 0.8 : (age <= 49 ? 0.9 : (age <= 59 ? 1 : 1)));
-  let D8 = ((years - partTimeYears) <= (years * 2/3)) ? (partTimeYears / years) * partTimeSalary : 0;
-  let D9 = (D8 == 0) ? fullTimeSalary : ((years - partTimeYears) / years) * fullTimeSalary;
-  let C10 = D9 + D8;
-  let C11 = Math.round(C10 * 13.27 / 12);
-  let D11 = C11;
-  let rawBaseComp = D11 * years * C5;
-  let E11 = Math.min(rawBaseComp, 250000);
+      let D12 = 4000, D13 = 6000, D14 = 6000, D15 = 3000; E3 = 5000;
+      let E12 = (children) ? children * D12 : 0;
+      let E13 = isSingle ? D13 : 0;
+      let E14 = isDisabled ? D14 : 0;
+      let E15 = isEqual ? D15 : 0;
 
-  let D12 = 4000, D13 = 6000, D14 = 6000, D15 = 3000; E3 = 5000;
-  let E12 = (children) ? children * D12 : 0;
-  let E13 = isSingle ? D13 : 0;
-  let E14 = isDisabled ? D14 : 0;
-  let E15 = isEqual ? D15 : 0;
+      let D19 = 0.3;
+      let rawE20 = D11 * years * D19;
+      let E20 = isVoluntary ? Math.min(Math.round(rawE20), 150000) : 0;
+      let E21 = isVoluntary ? (age < 30 ? 0 : (age < 40 ? 7500 : (age < 50 ? 10000 : (age < 60 ? 12500 : 15000))) : 0;
+      let E22 = isVoluntary ? (years <= 10 ? 5000 : (years <= 15 ? 7500 : (years <= 20 ? 10000 : (years <= 25 ? 12500 : 15000))) : 0;
+      let E18 = isVoluntary ? E20 + E21 + E22 : 0;
 
-  let D19 = 0.3;
-  let rawE20 = D11 * years * D19;
-  let E20 = isVoluntary ? Math.min(Math.round(rawE20), 150000) : 0;
-  let E21 = isVoluntary ? (age < 30 ? 0 : (age < 40 ? 7500 : (age < 50 ? 10000 : (age < 60 ? 12500 : 15000))) : 0;
-  let E22 = isVoluntary ? (years <= 10 ? 5000 : (years <= 15 ? 7500 : (years <= 20 ? 10000 : (years <= 25 ? 12500 : 15000))) : 0;
-  let E18 = isVoluntary ? E20 + E21 + E22 : 0;
+      let E2 = E3 + E11 + E12 + E13 + E14 + E15;
+      let E24 = E18 ? E18 + E2 : E2;
 
-  let E2 = E3 + E11 + E12 + E13 + E14 + E15;
-  let E24 = E18 ? E18 + E2 : E2;
+      const cappedBase = rawBaseComp > 250000;
+      const cappedVoluntary = rawE20 > 150000;
 
-  const cappedBase = rawBaseComp > 250000;
-  const cappedVoluntary = rawE20 > 150000;
+      document.getElementById('result').innerHTML = `
+        <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €<br/>
+        <strong>Basisabfindung:</strong> ${E11.toLocaleString('de-DE')} €
+        ${cappedBase ? '<span class="text-red-600 text-xs"> *Deckelung erreicht</span>' : ''}<br/>
+        <strong>Zuschläge:</strong><br/>
+        - Sockelbetrag: ${E3.toLocaleString('de-DE')} €<br/>
+        - Kinder: ${E12.toLocaleString('de-DE')} €<br/>
+        - Alleinerziehend: ${E13.toLocaleString('de-DE')} €<br/>
+        - Schwerbehinderung: ${E14.toLocaleString('de-DE')} €<br/>
+        - Gleichstellung: ${E15.toLocaleString('de-DE')} €<br/>
+        - Freiwilligenprogramm (gesamt): ${E18.toLocaleString('de-DE')} €
+        ${cappedVoluntary ? '<span class="text-red-600 text-xs"> *Deckelung erreicht</span>' : ''}<br/>
+        <strong>Gesamtabfindung:</strong> <span class="text-xl font-bold">${E24.toLocaleString('de-DE')} €</span>
+      `;
+    }
 
-  document.getElementById('result').innerHTML = `
-    <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €<br/>
-    <strong>Basisabfindung:</strong> ${E11.toLocaleString('de-DE')} €
-    ${cappedBase ? '<span class="text-red-600 text-xs"> *Deckelung erreicht</span>' : ''}<br/>
-    <strong>Zuschläge:</strong><br/>
-    - Sockelbetrag: ${E3.toLocaleString('de-DE')} €<br/>
-    - Kinder: ${E12.toLocaleString('de-DE')} €<br/>
-    - Alleinerziehend: ${E13.toLocaleString('de-DE')} €<br/>
-    - Schwerbehinderung: ${E14.toLocaleString('de-DE')} €<br/>
-    - Gleichstellung: ${E15.toLocaleString('de-DE')} €<br/>
-    - Freiwilligenprogramm (gesamt): ${E18.toLocaleString('de-DE')} €
-    ${cappedVoluntary ? '<span class="text-red-600 text-xs"> *Deckelung erreicht</span>' : ''}<br/>
-    <strong>Gesamtabfindung:</strong> <span class="text-xl font-bold">${E24.toLocaleString('de-DE')} €</span>
-  `;
-}
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("today").textContent = new Date().toLocaleDateString("de-DE");
+    });
+  </script>
+  <style>
+    .input { padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.5rem; width: 100%; }
+  </style>
+</body>
+</html>
