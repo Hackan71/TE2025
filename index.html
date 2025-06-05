@@ -89,15 +89,18 @@
       let E24 = E18 ? E18 + E2 : E2;
 
       document.getElementById('result').innerHTML = `
-        <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €<br/>
-        <strong>Basisabfindung:</strong> ${E11.toLocaleString('de-DE')} €<br/>
+        <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €
+	${D8 == 0 ? '<span class="text-red">* Vollzeit Gehalt wird verwendet, da Teilzeit unterhalb 1/3 der Betriebszugeörigkeit</span>' : ''}<br/>
+        <strong>Basisabfindung:</strong> ${E11.toLocaleString('de-DE')} €
+        ${E11 == 250000 ? '<span class="text-red">* Deckelung erreicht</span>' : ''}<br/>
         <strong>Zuschläge:</strong><br/>
         - Sockelbetrag: ${E3.toLocaleString('de-DE')} €<br/>
         - Kinder: ${E12.toLocaleString('de-DE')} €<br/>
         - Alleinerziehend: ${E13.toLocaleString('de-DE')} €<br/>
         - Schwerbehinderung: ${E14.toLocaleString('de-DE')} €<br/>
         - Gleichstellung: ${E15.toLocaleString('de-DE')} €<br/>
-        - Freiwilligenprogramm (gesamt): ${E18.toLocaleString('de-DE')} €<br/>
+        - Freiwilligenprogramm (gesamt): ${E18.toLocaleString('de-DE')} €
+        ${E20 == 150000 ? '<span class="text-red">Deckelung von 150.000 € erreicht</span>' : ''}<br/>
         <strong>Gesamtabfindung:</strong> <span class="text-xl font-bold">${E24.toLocaleString('de-DE')} €</span>
       `;
     }
