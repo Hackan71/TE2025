@@ -90,7 +90,7 @@
 
       document.getElementById('result').innerHTML = `
         <strong>Fiktives Bruttogehalt:</strong> ${C11.toLocaleString('de-DE')} €
-	${D8 == 0 ? '<span class="text-red">* Vollzeit Gehalt wird verwendet, da Teilzeit unterhalb 1/3 der Betriebszugeörigkeit</span>' : ''}<br/>
+	${D8 == 0 ? '<span class="text-red">* Bruttogehalt aus Vollzeit wird verwendet, da Teilzeit unterhalb 1/3 der Betriebszugeörigkeit liegt</span>' : ''}<br/>
         <strong>Basisabfindung:</strong> ${E11.toLocaleString('de-DE')} €
         ${E11 == 250000 ? '<span class="text-red">* Deckelung erreicht</span>' : ''}<br/>
         <strong>Zuschläge:</strong><br/>
