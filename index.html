@@ -31,19 +31,6 @@
       width: 100%;
       padding: 10px;
       font-size: 1em;
-      /* Erhöhter Rahmen für Eingabefelder */
-      input[type="number"],
-      input[type="text"] {
-      border: 2px solid #555; /* statt 1px */
-      }
-
-      /* Responsive Design für Mobilgeräte */
-      @media (max-width: 600px) {
-     body {
-    padding-left: 20px;
-    padding-right: 40px;
-  }
-}
       background-color: #444;
       border: 1px solid #555;
       color: white;
@@ -66,9 +53,17 @@
       accent-color: orange;
     }
     .output {
+      display: flex;
+      justify-content: space-between;
       font-weight: bold;
-      color: white;
       margin-top: 5px;
+      color: white;
+    }
+    .output .label {
+      text-align: left;
+    }
+    .output .value {
+      text-align: right;
     }
     .trennlinie {
       height: 2px;
@@ -102,10 +97,16 @@
       font-weight: bold;
       margin-left: 10px;
     }
+    @media (max-width: 550px) {
+      body {
+        padding-left: 20px;
+        padding-right: 40px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>RAHMENSOZIALPLAN<br>ABFINDUNGSRECHNER</h1>
+  <h1>RAHMENSOZIELPLAN  <br>ABFINDUNGSRECHNER</h1>
   <form id="rechnerForm">
     <table>
       <tr><td><input type="number" id="alter" placeholder="Vollendetes Alter" min="16" max="66"></td></tr>
@@ -113,9 +114,9 @@
       <tr><td><input type="number" id="teilzeit" placeholder="Davon Jahre in Teilzeit" min="0"></td></tr>
       <tr><td><input type="number" id="gehaltTeilzeit" placeholder="Bruttomonatsgehalt in Teilzeit (€)"></td></tr>
       <tr><td><input type="number" id="gehaltVollzeit" placeholder="Bruttomonatsgehalt in Vollzeit (€)"></td></tr>
-      <tr><td><div class="output" id="abfaktor"></div></td></tr>
-      <tr><td><div class="output" id="bruttoInfo"></div></td></tr>
-      <tr><td><div class="output" id="abfindungSumme"></div></td></tr>
+      <tr><td><div class="output"><span class="label">Abfindungsfaktor:</span><span class="value" id="abfaktor"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Bruttogehalt:</span><span class="value" id="bruttoInfo"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Abfindungssumme:</span><span class="value" id="abfindungSumme"></span></div></td></tr>
     </table>
 
     <div class="trennlinie"></div>
@@ -140,7 +141,7 @@
           <label for="gleichstellung">Gleichstellung (3.000 €)</label>
         </td>
       </tr>
-      <tr><td><div class="output" id="outplacement"></div></td></tr>
+      <tr><td><div class="output"><span class="label">Outplacement:</span><span class="value" id="outplacement"></span></div></td></tr>
     </table>
 
     <div class="trennlinie"></div>
@@ -148,23 +149,23 @@
       <tr>
         <td class="checkbox-label">
           <input type="checkbox" id="freiwillig">
-          <label for="freiwillig"><strong>Freiwilligenprogramm</strong></label>
+          <label for="freiwillig"><strong style="font-size: 1.2em;">Freiwilligenprogramm</strong></label>
         </td>
       </tr>
-      <tr><td><div class="output" id="zusatzfaktor"></div></td></tr>
-      <tr><td><div class="output" id="freiZusatz"></div></td></tr>
-      <tr><td><div class="output" id="sockelErhoehung"></div></td></tr>
-      <tr><td><div class="output" id="kapitalisierung"></div></td></tr>
-      <tr><td><div class="output" id="bruttoGesamt"></div></td></tr>
+      <tr><td><div class="output"><span class="label">Zusatzfaktor:</span><span class="value" id="zusatzfaktor"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Zusatzabfindung:</span><span class="value" id="freiZusatz"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Sockelerhöhung:</span><span class="value" id="sockelErhoehung"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Kapitalisierung:</span><span class="value" id="kapitalisierung"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Gesamte Bruttoabfindung:</span><span class="value" id="bruttoGesamt"></span></div></td></tr>
     </table>
 
     <button type="button" id="calculateButton" onclick="berechne()">Berechnen</button>
-    <button type="button" id="resetButton" onclick="document.getElementById('rechnerForm').reset(); Array.from(document.querySelectorAll('.output')).forEach(e => e.textContent = '')">Zurücksetzen</button>
+    <button type="button" id="resetButton" onclick="document.getElementById('rechnerForm').reset(); Array.from(document.querySelectorAll('.value')).forEach(e => e.textContent = '')">Zurücksetzen</button>
   </form>
 
   <div class="info">
     Dieser Rechner dient nur zu Informationszwecken. Keine Gewähr auf Richtigkeit. <br>
-    Erstellt von Hakan Tokat, Stand: 13.06.2025
+    Erstellt von Hakan Tokat, Stand: 12.06.2025
   </div>
 
   <script>
@@ -181,19 +182,18 @@
       const freiwillig = document.getElementById("freiwillig").checked;
 
       const faktor = alter < 30 ? 0.7 : alter <= 39 ? 0.8 : alter <= 49 ? 0.9 : 1;
-      document.getElementById("abfaktor").textContent = `Abfindungsfaktor: ${faktor.toFixed(2)}`;
+      document.getElementById("abfaktor").textContent = faktor.toFixed(2);
 
       const anteilT = ((zu - teilzeit) <= zu * 2 / 3) ? (teilzeit / zu * gehaltT) : 0;
       const anteilV = anteilT === 0 ? gehaltV : ((zu - teilzeit) / zu * gehaltV);
       const brutto = anteilT + anteilV;
-      const fiktivText = anteilT === 0 ? "Bruttomonatsgehalt: " : "Fiktives Bruttogehalt: ";
-      document.getElementById("bruttoInfo").textContent = `${fiktivText} (${brutto.toFixed(0)}×13,27/12)`;
+      document.getElementById("bruttoInfo").textContent = `${Math.round(brutto * 13.27 / 12).toLocaleString("de-DE")} €`;
 
       const basis = Math.round(brutto * 13.27 / 12);
       let abfindung = Math.round(basis * zu * faktor);
       const abfDeckel = abfindung >= 250000;
       if (abfDeckel) abfindung = 250000;
-      document.getElementById("abfindungSumme").textContent = "Abfindungssumme: " + abfindung.toLocaleString("de-DE") + " €" + (abfindung === 250000 ? " (Deckelung)" : "");
+      document.getElementById("abfindungSumme").textContent = abfindung.toLocaleString("de-DE") + " €" + (abfindung === 250000 ? " (Deckelung)" : "");
 
       const kinderBonus = kinder * 4000;
       const allein = alleinerziehend ? 6000 : 0;
@@ -201,30 +201,30 @@
       const gleich = gleichstellung ? 3000 : 0;
 
       const outplace = freiwillig ? 0 : (zu <= 10 ? 5000 : zu <= 15 ? 7500 : zu <= 20 ? 10000 : zu <= 25 ? 12500 : 15000);
-      document.getElementById("outplacement").textContent = outplace ? `Outplacement: ${outplace.toLocaleString("de-DE")} €` : "";
+      document.getElementById("outplacement").textContent = outplace ? `${outplace.toLocaleString("de-DE")} €` : "";
 
       const zusatzFaktor = freiwillig ? 0.3 : 0;
-      document.getElementById("zusatzfaktor").textContent = zusatzFaktor ? `Zusatzfaktor: ${zusatzFaktor}` : "";
+      document.getElementById("zusatzfaktor").textContent = zusatzFaktor ? zusatzFaktor : "";
 
       let zusatzAbf = freiwillig ? Math.round(basis * zu * zusatzFaktor) : 0;
       const zusatzDeckel = zusatzAbf >= 150000;
       if (zusatzDeckel) zusatzAbf = 150000;
-      document.getElementById("freiZusatz").innerHTML = zusatzAbf ? `Zusatzabfindung: ${zusatzAbf.toLocaleString("de-DE")} €${zusatzDeckel ? '<span class="deckelung">Deckelung</span>' : ''}` : "";
+      document.getElementById("freiZusatz").innerHTML = zusatzAbf ? `${zusatzAbf.toLocaleString("de-DE")} €${zusatzDeckel ? '<span class="deckelung"> Deckelung</span>' : ''}` : "";
 
       let sockelErh = 0;
       if (freiwillig) {
         sockelErh = alter < 30 ? 0 : alter < 40 ? 7500 : alter < 50 ? 10000 : alter < 60 ? 12500 : 15000;
-        document.getElementById("sockelErhoehung").textContent = sockelErh ? `Sockelerhöhung: ${sockelErh.toLocaleString("de-DE")} €` : "";
+        document.getElementById("sockelErhoehung").textContent = sockelErh ? `${sockelErh.toLocaleString("de-DE")} €` : "";
       } else {
         document.getElementById("sockelErhoehung").textContent = "";
       }
 
       const kapitalisierung = freiwillig ? (zu <= 10 ? 5000 : zu <= 15 ? 7500 : zu <= 20 ? 10000 : zu <= 25 ? 12500 : 15000) : 0;
-      document.getElementById("kapitalisierung").textContent = kapitalisierung ? `Kapitalisierung Outplacement: ${kapitalisierung.toLocaleString("de-DE")} €` : "";
+      document.getElementById("kapitalisierung").textContent = kapitalisierung ? `${kapitalisierung.toLocaleString("de-DE")} €` : "";
 
       const sockelbetrag = freiwillig && alter >= 30 ? 0 : 5000;
       const gesamt = abfindung + kinderBonus + allein + schwer + gleich + outplace + zusatzAbf + sockelErh + kapitalisierung + sockelbetrag;
-      document.getElementById("bruttoGesamt").textContent = `Gesamte Bruttoabfindung: ${gesamt.toLocaleString("de-DE")} €`;
+      document.getElementById("bruttoGesamt").textContent = `${gesamt.toLocaleString("de-DE")} €`;
     }
   </script>
 </body>
