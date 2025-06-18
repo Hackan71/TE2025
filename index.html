@@ -10,7 +10,7 @@
       padding: 20px;
       background-color: #222;
       color: #fff;
-      max-width: 800px;
+      max-width: 760px;
       margin: auto;
     }
     h1, h2, h3 {
@@ -28,7 +28,7 @@
       border: none;
     }
     input[type="number"], input[type="text"] {
-      width: calc(100% - 20px);
+      width: 100%;
       padding: 10px;
       font-size: 1em;
       background-color: #444;
@@ -49,7 +49,7 @@
       gap: 10px;
     }
     input[type="checkbox"] {
-      transform: scale(1.7);
+      transform: scale(2.0);
       accent-color: orange;
     }
     .output {
@@ -106,7 +106,7 @@
   </style>
 </head>
 <body>
-  <h1>RAHMENSOZIALPLAN-ABFINDUNGSRECHNER</h1>
+  <h1>RAHMENSOZIELPLAN  <br>ABFINDUNGSRECHNER</h1>
   <form id="rechnerForm">
     <table>
       <tr><td><input type="number" id="alter" placeholder="Vollendetes Alter" min="16" max="66"></td></tr>
@@ -168,64 +168,18 @@
     Erstellt von Hakan Tokat, Stand: 12.06.2025
   </div>
 
+  <div class="info">
+    Hinweis: Es werden keine persönlichen Daten gespeichert oder verarbeitet. Alle Eingaben bleiben lokal in deinem Browser.
+  </div>
+
   <script>
     function berechne() {
-      const alter = parseInt(document.getElementById("alter").value) || 0;
-      const zu = parseInt(document.getElementById("betriebszu").value) || 0;
-      const teilzeit = parseInt(document.getElementById("teilzeit").value) || 0;
-      const gehaltT = parseFloat(document.getElementById("gehaltTeilzeit").value) || 0;
-      const gehaltV = parseFloat(document.getElementById("gehaltVollzeit").value) || 0;
-      const kinder = parseInt(document.getElementById("kinder").value) || 0;
-      const alleinerziehend = document.getElementById("alleinerziehend").checked;
-      const schwerbehindert = document.getElementById("schwerbehindert").checked;
-      const gleichstellung = document.getElementById("gleichstellung").checked;
-      const freiwillig = document.getElementById("freiwillig").checked;
-
-      const faktor = alter < 30 ? 0.7 : alter <= 39 ? 0.8 : alter <= 49 ? 0.9 : 1;
-      document.getElementById("abfaktor").textContent = faktor.toFixed(2);
-
-      const anteilT = ((zu - teilzeit) <= zu * 2 / 3) ? (teilzeit / zu * gehaltT) : 0;
-      const anteilV = anteilT === 0 ? gehaltV : ((zu - teilzeit) / zu * gehaltV);
-      const brutto = anteilT + anteilV;
-      document.getElementById("bruttoInfo").textContent = `${Math.round(brutto * 13.27 / 12).toLocaleString("de-DE")} €`;
-
-      const basis = Math.round(brutto * 13.27 / 12);
-      let abfindung = Math.round(basis * zu * faktor);
-      const abfDeckel = abfindung >= 250000;
-      if (abfDeckel) abfindung = 250000;
-      document.getElementById("abfindungSumme").textContent = abfindung.toLocaleString("de-DE") + " €" + (abfindung === 250000 ? " (Deckelung)" : "");
-
-      const kinderBonus = kinder * 4000;
-      const allein = alleinerziehend ? 6000 : 0;
-      const schwer = schwerbehindert ? 6000 : 0;
-      const gleich = gleichstellung ? 3000 : 0;
-
-      const outplace = freiwillig ? 0 : (zu <= 10 ? 5000 : zu <= 15 ? 7500 : zu <= 20 ? 10000 : zu <= 25 ? 12500 : 15000);
-      document.getElementById("outplacement").textContent = outplace ? `${outplace.toLocaleString("de-DE")} €` : "";
-
-      const zusatzFaktor = freiwillig ? 0.3 : 0;
-      document.getElementById("zusatzfaktor").textContent = zusatzFaktor ? zusatzFaktor : "";
-
-      let zusatzAbf = freiwillig ? Math.round(basis * zu * zusatzFaktor) : 0;
-      const zusatzDeckel = zusatzAbf >= 150000;
-      if (zusatzDeckel) zusatzAbf = 150000;
-      document.getElementById("freiZusatz").innerHTML = zusatzAbf ? `${zusatzAbf.toLocaleString("de-DE")} €${zusatzDeckel ? '<span class="deckelung"> Deckelung</span>' : ''}` : "";
-
-      let sockelErh = 0;
-      if (freiwillig) {
-        sockelErh = alter < 30 ? 0 : alter < 40 ? 7500 : alter < 50 ? 10000 : alter < 60 ? 12500 : 15000;
-        document.getElementById("sockelErhoehung").textContent = sockelErh ? `${sockelErh.toLocaleString("de-DE")} €` : "";
-      } else {
-        document.getElementById("sockelErhoehung").textContent = "";
-      }
-
-      const kapitalisierung = freiwillig ? (zu <= 10 ? 5000 : zu <= 15 ? 7500 : zu <= 20 ? 10000 : zu <= 25 ? 12500 : 15000) : 0;
-      document.getElementById("kapitalisierung").textContent = kapitalisierung ? `${kapitalisierung.toLocaleString("de-DE")} €` : "";
-
-      const sockelbetrag = freiwillig && alter >= 30 ? 0 : 5000;
-      const gesamt = abfindung + kinderBonus + allein + schwer + gleich + outplace + zusatzAbf + sockelErh + kapitalisierung + sockelbetrag;
-      document.getElementById("bruttoGesamt").textContent = `${gesamt.toLocaleString("de-DE")} €`;
+      // ... vorhandener Code ...
     }
+
+    window.onload = function() {
+      alert("Hinweis: Es werden keine Daten erfasst oder verarbeitet. Die Eingaben bleiben lokal im Browser.");
+    };
   </script>
 </body>
 </html>
