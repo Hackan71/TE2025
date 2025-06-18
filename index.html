@@ -6,11 +6,11 @@
   <title>Abfindungsrechner</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+        font-family: Arial, sans-serif;
       padding: 20px;
       background-color: #222;
       color: #fff;
-      max-width: 760px;
+      max-width: 800px;
       margin: auto;
     }
     h1, h2, h3 {
@@ -19,16 +19,22 @@
     h2, h3 {
       margin-top: 30px;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    td {
+      padding: 10px 0;
+      border: none;
+    }
     input[type="number"], input[type="text"] {
-      width: calc(100% - 40px);
+      width: calc(100% - 20px);
       padding: 10px;
       font-size: 1em;
       background-color: #444;
-      border: 1px solid #333;
+      border: 1px solid #555;
       color: white;
       border-radius: 4px;
-      display: block;
-      margin: auto;
     }
     input::placeholder {
       color: #bbb;
@@ -41,10 +47,9 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-top: 10px;
     }
     input[type="checkbox"] {
-      transform: scale(1.5);
+      transform: scale(1.7);
       accent-color: orange;
     }
     .output {
@@ -92,32 +97,6 @@
       font-weight: bold;
       margin-left: 10px;
     }
-    #datenschutzHinweis {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-      padding: 20px;
-      text-align: center;
-    }
-    #datenschutzHinweis button {
-      margin-top: 20px;
-      background-color: orange;
-      color: black;
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
     @media (max-width: 550px) {
       body {
         padding-left: 20px;
@@ -127,65 +106,58 @@
   </style>
 </head>
 <body>
-  <div id="datenschutzHinweis">
-    <p><strong>Hinweis:</strong><br>Es werden keine Daten erfasst oder verarbeitet.</p>
-    <button onclick="document.getElementById('datenschutzHinweis').style.display='none'">OK</button>
-  </div>
-
-  <h1>RAHMENSOZIALPLAN<br>ABFINDUNGSRECHNER</h1>
-
+  <h1>RAHMENSOZIALPLAN-ABFINDUNGSRECHNER</h1>
   <form id="rechnerForm">
-    <input type="number" id="alter" placeholder="Alter (16–66)" min="16" max="66">
-    <input type="number" id="betriebszugehoerigkeit" placeholder="Betriebszugehörigkeit in Jahren" min="1" max="50">
-    <input type="number" id="teilzeitJahre" placeholder="Jahre in Teilzeit" min="0">
-    <input type="number" id="gehaltTeilzeit" placeholder="Bruttogehalt in Teilzeit (EUR)">
-    <input type="number" id="gehaltVollzeit" placeholder="Bruttogehalt in Vollzeit (EUR)">
-
-    <div class="output">
-      <div class="label">Abfindungsfaktor</div>
-      <div class="value" id="abfindungsfaktor"></div>
-    </div>
-
-    <div class="trennlinie"></div>
-    <h2>Schutzbedürftigkeit</h2>
-
-    <input type="number" id="kinder" placeholder="Anzahl Kinder unter 27 Jahren" min="0" max="10">
-
-    <div class="checkbox-label">
-      <input type="checkbox" id="alleinerziehend">
-      <label for="alleinerziehend">Alleinerziehend (6000 €)</label>
-    </div>
-
-    <div class="checkbox-label">
-      <input type="checkbox" id="schwerbehindert" onchange="document.getElementById('gleichgestellt').checked = false">
-      <label for="schwerbehindert">Schwerbehindert (6000 €)</label>
-    </div>
-
-    <div class="checkbox-label">
-      <input type="checkbox" id="gleichgestellt" onchange="document.getElementById('schwerbehindert').checked = false">
-      <label for="gleichgestellt">Gleichgestellt (3000 €)</label>
-    </div>
-
-    <div class="output">
-      <div class="label">Abfindungssumme</div>
-      <div class="value" id="abfindungssumme"></div>
-    </div>
+    <table>
+      <tr><td><input type="number" id="alter" placeholder="Vollendetes Alter" min="16" max="66"></td></tr>
+      <tr><td><input type="number" id="betriebszu" placeholder="Betriebszugehörigkeit (Jahre)" min="1" max="50"></td></tr>
+      <tr><td><input type="number" id="teilzeit" placeholder="Davon Jahre in Teilzeit" min="0"></td></tr>
+      <tr><td><input type="number" id="gehaltTeilzeit" placeholder="Bruttomonatsgehalt in Teilzeit (€)"></td></tr>
+      <tr><td><input type="number" id="gehaltVollzeit" placeholder="Bruttomonatsgehalt in Vollzeit (€)"></td></tr>
+      <tr><td><div class="output"><span class="label">Abfindungsfaktor:</span><span class="value" id="abfaktor"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Bruttogehalt:</span><span class="value" id="bruttoInfo"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Abfindungssumme:</span><span class="value" id="abfindungSumme"></span></div></td></tr>
+    </table>
 
     <div class="trennlinie"></div>
-    <div class="checkbox-label">
-      <input type="checkbox" id="freiwillig">
-      <label for="freiwillig" style="font-size: 1.2em;">Freiwilligenprogramm</label>
-    </div>
+    <h3>Schutzbedürftigkeit</h3>
+    <table>
+      <tr><td><input type="number" id="kinder" placeholder="Kinder unter 27 Jahre (4.000 € pro Kind)" min="0" max="10"></td></tr>
+      <tr>
+        <td class="checkbox-label">
+          <input type="checkbox" id="alleinerziehend">
+          <label for="alleinerziehend">Alleinerziehend (6.000 €)</label>
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox-label">
+          <input type="checkbox" id="schwerbehindert" onclick="if(this.checked) document.getElementById('gleichstellung').checked = false;">
+          <label for="schwerbehindert">Schwerbehinderung (6.000 €)</label>
+        </td>
+      </tr>
+      <tr>
+        <td class="checkbox-label">
+          <input type="checkbox" id="gleichstellung" onclick="if(this.checked) document.getElementById('schwerbehindert').checked = false;">
+          <label for="gleichstellung">Gleichstellung (3.000 €)</label>
+        </td>
+      </tr>
+      <tr><td><div class="output"><span class="label">Outplacement:</span><span class="value" id="outplacement"></span></div></td></tr>
+    </table>
 
-    <div class="output">
-      <div class="label">Freiwillige Zusatzabfindung</div>
-      <div class="value" id="freiwilligSumme"></div>
-    </div>
-
-    <div class="output">
-      <div class="label">Gesamte Bruttoabfindung</div>
-      <div class="value" id="gesamtSumme"></div>
-    </div>
+    <div class="trennlinie"></div>
+    <table>
+      <tr>
+        <td class="checkbox-label">
+          <input type="checkbox" id="freiwillig">
+          <label for="freiwillig"><strong style="font-size: 1.2em;">Freiwilligenprogramm</strong></label>
+        </td>
+      </tr>
+      <tr><td><div class="output"><span class="label">Zusatzfaktor:</span><span class="value" id="zusatzfaktor"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Zusatzabfindung:</span><span class="value" id="freiZusatz"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Sockelerhöhung:</span><span class="value" id="sockelErhoehung"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Kapitalisierung:</span><span class="value" id="kapitalisierung"></span></div></td></tr>
+      <tr><td><div class="output"><span class="label">Gesamte Bruttoabfindung:</span><span class="value" id="bruttoGesamt"></span></div></td></tr>
+    </table>
 
     <button type="button" id="calculateButton" onclick="berechne()">Berechnen</button>
     <button type="button" id="resetButton" onclick="document.getElementById('rechnerForm').reset(); Array.from(document.querySelectorAll('.value')).forEach(e => e.textContent = '')">Zurücksetzen</button>
@@ -193,50 +165,66 @@
 
   <div class="info">
     Dieser Rechner dient nur zu Informationszwecken. Keine Gewähr auf Richtigkeit. <br>
-    Erstellt von Hakan Tokat, Stand: 12.06.2025<br><br>
-    <strong>Hinweis:</strong> Es werden keine Daten erfasst oder verarbeitet.
+    Erstellt von Hakan Tokat, Stand: 12.06.2025
   </div>
 
   <script>
     function berechne() {
-      const alter = parseInt(document.getElementById('alter').value);
-      const zugehörigkeit = parseInt(document.getElementById('betriebszugehoerigkeit').value);
-      const teilzeit = parseInt(document.getElementById('teilzeitJahre').value);
-      const gehaltTeil = parseFloat(document.getElementById('gehaltTeilzeit').value);
-      const gehaltVoll = parseFloat(document.getElementById('gehaltVollzeit').value);
-      const kinder = parseInt(document.getElementById('kinder').value);
-      const alleinerziehend = document.getElementById('alleinerziehend').checked;
-      const schwerbehindert = document.getElementById('schwerbehindert').checked;
-      const gleichgestellt = document.getElementById('gleichgestellt').checked;
-      const freiwillig = document.getElementById('freiwillig').checked;
+      const alter = parseInt(document.getElementById("alter").value) || 0;
+      const zu = parseInt(document.getElementById("betriebszu").value) || 0;
+      const teilzeit = parseInt(document.getElementById("teilzeit").value) || 0;
+      const gehaltT = parseFloat(document.getElementById("gehaltTeilzeit").value) || 0;
+      const gehaltV = parseFloat(document.getElementById("gehaltVollzeit").value) || 0;
+      const kinder = parseInt(document.getElementById("kinder").value) || 0;
+      const alleinerziehend = document.getElementById("alleinerziehend").checked;
+      const schwerbehindert = document.getElementById("schwerbehindert").checked;
+      const gleichstellung = document.getElementById("gleichstellung").checked;
+      const freiwillig = document.getElementById("freiwillig").checked;
 
-      let faktor = 1.0;
-      if (alter < 30) faktor = 0.7;
-      else if (alter < 40) faktor = 0.8;
-      else if (alter < 50) faktor = 0.9;
-      else if (alter < 60) faktor = 1.0;
-      else faktor = 1.0;
+      const faktor = alter < 30 ? 0.7 : alter <= 39 ? 0.8 : alter <= 49 ? 0.9 : 1;
+      document.getElementById("abfaktor").textContent = faktor.toFixed(2);
 
-      const durchschnittsgehalt = ((gehaltTeil * teilzeit + gehaltVoll * (zugehörigkeit - teilzeit)) / zugehörigkeit);
-      const abfindung = Math.min(durchschnittsgehalt * zugehörigkeit * faktor, 250000);
+      const anteilT = ((zu - teilzeit) <= zu * 2 / 3) ? (teilzeit / zu * gehaltT) : 0;
+      const anteilV = anteilT === 0 ? gehaltV : ((zu - teilzeit) / zu * gehaltV);
+      const brutto = anteilT + anteilV;
+      document.getElementById("bruttoInfo").textContent = `${Math.round(brutto * 13.27 / 12).toLocaleString("de-DE")} €`;
 
-      let zuschlag = 0;
-      if (kinder) zuschlag += kinder * 4000;
-      if (alleinerziehend) zuschlag += 6000;
-      if (schwerbehindert) zuschlag += 6000;
-      if (gleichgestellt) zuschlag += 3000;
+      const basis = Math.round(brutto * 13.27 / 12);
+      let abfindung = Math.round(basis * zu * faktor);
+      const abfDeckel = abfindung >= 250000;
+      if (abfDeckel) abfindung = 250000;
+      document.getElementById("abfindungSumme").textContent = abfindung.toLocaleString("de-DE") + " €" + (abfindung === 250000 ? " (Deckelung)" : "");
 
-      const abfindungSumme = abfindung + zuschlag;
+      const kinderBonus = kinder * 4000;
+      const allein = alleinerziehend ? 6000 : 0;
+      const schwer = schwerbehindert ? 6000 : 0;
+      const gleich = gleichstellung ? 3000 : 0;
 
-      let freiwilligBetrag = 0;
-      if (freiwillig) freiwilligBetrag = Math.min(abfindung * 0.3, 150000);
+      const outplace = freiwillig ? 0 : (zu <= 10 ? 5000 : zu <= 15 ? 7500 : zu <= 20 ? 10000 : zu <= 25 ? 12500 : 15000);
+      document.getElementById("outplacement").textContent = outplace ? `${outplace.toLocaleString("de-DE")} €` : "";
 
-      const gesamt = abfindungSumme + freiwilligBetrag;
+      const zusatzFaktor = freiwillig ? 0.3 : 0;
+      document.getElementById("zusatzfaktor").textContent = zusatzFaktor ? zusatzFaktor : "";
 
-      document.getElementById('abfindungsfaktor').textContent = faktor.toFixed(2);
-      document.getElementById('abfindungssumme').textContent = abfindungSumme.toLocaleString('de-DE') + ' €' + (abfindung === 250000 ? ' (Deckelung)' : '');
-      document.getElementById('freiwilligSumme').textContent = freiwillig ? freiwilligBetrag.toLocaleString('de-DE') + ' €' + (freiwilligBetrag === 150000 ? ' (Deckelung)' : '') : '';
-      document.getElementById('gesamtSumme').textContent = gesamt.toLocaleString('de-DE') + ' €';
+      let zusatzAbf = freiwillig ? Math.round(basis * zu * zusatzFaktor) : 0;
+      const zusatzDeckel = zusatzAbf >= 150000;
+      if (zusatzDeckel) zusatzAbf = 150000;
+      document.getElementById("freiZusatz").innerHTML = zusatzAbf ? `${zusatzAbf.toLocaleString("de-DE")} €${zusatzDeckel ? '<span class="deckelung"> Deckelung</span>' : ''}` : "";
+
+      let sockelErh = 0;
+      if (freiwillig) {
+        sockelErh = alter < 30 ? 0 : alter < 40 ? 7500 : alter < 50 ? 10000 : alter < 60 ? 12500 : 15000;
+        document.getElementById("sockelErhoehung").textContent = sockelErh ? `${sockelErh.toLocaleString("de-DE")} €` : "";
+      } else {
+        document.getElementById("sockelErhoehung").textContent = "";
+      }
+
+      const kapitalisierung = freiwillig ? (zu <= 10 ? 5000 : zu <= 15 ? 7500 : zu <= 20 ? 10000 : zu <= 25 ? 12500 : 15000) : 0;
+      document.getElementById("kapitalisierung").textContent = kapitalisierung ? `${kapitalisierung.toLocaleString("de-DE")} €` : "";
+
+      const sockelbetrag = freiwillig && alter >= 30 ? 0 : 5000;
+      const gesamt = abfindung + kinderBonus + allein + schwer + gleich + outplace + zusatzAbf + sockelErh + kapitalisierung + sockelbetrag;
+      document.getElementById("bruttoGesamt").textContent = `${gesamt.toLocaleString("de-DE")} €`;
     }
   </script>
 </body>
