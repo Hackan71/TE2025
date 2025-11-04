@@ -172,7 +172,7 @@
   <script>
     function berechne() {
       const alter = parseInt(document.getElementById("alter").value) || 0;
-      const zu = parseInt(document.getElementById("betriebszu").value) || 0;
+      const zu = parseFloat(document.getElementById("betriebszu").value) || 0;
       const teilzeit = parseInt(document.getElementById("teilzeit").value) || 0;
       const gehaltT = parseFloat(document.getElementById("gehaltTeilzeit").value) || 0;
       const gehaltV = parseFloat(document.getElementById("gehaltVollzeit").value) || 0;
@@ -230,4 +230,5 @@
   </script>
 </body>
 </html>
+
 
