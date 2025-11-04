@@ -166,7 +166,7 @@
   <div class="info">
     Dieser Rechner dient nur zu Informationszwecken. Keine Gewähr auf Richtigkeit. <br>
     Bei der Nutzung dieser Anwendung werden keinerlei personenbezogene Daten erfasst oder gespeichert. Alle Berechnungen erfolgen ausschließlich lokal und dienen lediglich der unmittelbaren Ergebnisanzeige. Eine Weitergabe oder Speicherung von Daten findet nicht statt. <br>
-    Erstellt von Hakan Tokat, Stand: 12.06.2025
+    Erstellt von Hakan Tokat, Stand: 04.11.2025
   </div>
 
   <script>
@@ -188,10 +188,10 @@
       const anteilT = ((zu - teilzeit) <= zu * 2 / 3) ? (teilzeit / zu * gehaltT) : 0;
       const anteilV = anteilT === 0 ? gehaltV : ((zu - teilzeit) / zu * gehaltV);
       const brutto = anteilT + anteilV;
-      document.getElementById("bruttoInfo").textContent = `${Math.round(brutto * 13.27 / 12).toLocaleString("de-DE")} €`;
+      document.getElementById("bruttoInfo").textContent = `${(brutto * 13.27 / 12).toLocaleString("de-DE", {minimumFractionDigits: 2, maximumFractionDigits: 2})} €`;
 
-      const basis = Math.round(brutto * 13.27 / 12);
-      let abfindung = Math.round(basis * zu * faktor);
+      const basis = brutto * 13.27 / 12;
+      let abfindung = basis * zu * faktor;
       const abfDeckel = abfindung >= 250000;
       if (abfDeckel) abfindung = 250000;
       document.getElementById("abfindungSumme").textContent = abfindung.toLocaleString("de-DE") + " €" + (abfindung === 250000 ? " (Deckelung)" : "");
@@ -207,7 +207,7 @@
       const zusatzFaktor = freiwillig ? 0.3 : 0;
       document.getElementById("zusatzfaktor").textContent = zusatzFaktor ? zusatzFaktor : "";
 
-      let zusatzAbf = freiwillig ? Math.round(basis * zu * zusatzFaktor) : 0;
+      let zusatzAbf = freiwillig ? (basis * zu * zusatzFaktor) : 0;
       const zusatzDeckel = zusatzAbf >= 150000;
       if (zusatzDeckel) zusatzAbf = 150000;
       document.getElementById("freiZusatz").innerHTML = zusatzAbf ? `${zusatzAbf.toLocaleString("de-DE")} €${zusatzDeckel ? '<span class="deckelung"> Deckelung</span>' : ''}` : "";
@@ -230,5 +230,6 @@
   </script>
 </body>
 </html>
+
 
 
